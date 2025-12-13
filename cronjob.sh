@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TARGET_DIR="/usr/lib/zabbix/externalscripts"
-REPO_URL="https://github.com/victorsarkisyan/FortinetAPI.git"
+REPO_URL="https://github.com/victorsarkisyan/APIs.git"
 
 # Temporary clone directory
 TMP_DIR="$(mktemp -d)"
