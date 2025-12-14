@@ -8,10 +8,10 @@ import urllib3
 # Disable insecure request warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
  
-# api_key = 
-# controller_ip = ""
+api_key = sys.argv[1]
+controller_ip = sys.argv[2]
 
-url = f"https://192.168.0.1/api/v2/monitor/switch-controller/managed-switch/status"
+url = f"https://{controller_ip}/api/v2/monitor/switch-controller/managed-switch/status"
 
 params = {
   'mkey': 'Switch_Office',
@@ -19,7 +19,7 @@ params = {
 
 headers = {
   'Content-Type': 'application/json',
-  'Authorization': f'Bearer bg5NjG4N4pst0zkwQpm9kcdqjHsz5p'   
+  'Authorization': f'Bearer {api_key}'   
 }
 
 response = requests.get(url, headers=headers, params=params, verify=False)
