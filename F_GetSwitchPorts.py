@@ -26,14 +26,17 @@ headers = {
 try:
     response = requests.get(url, headers=headers, params=params, verify=False)
     response.raise_for_status()
-
     data = response.json()
 
-    # flatten results list (FortiGate returns a list even for one sdwitch)
+    # flatten results list (if only one switch)
     if isinstance(data.get("results"), list) and len(data["results"]) == 1:
         data["results"] = data["results"][0]
 
-    print(json.dumps(data))
+    ports = []
+    for port_name in data["results"]["ports"].keys():
+        ports.append({"name": port_name})
+
+    print(json.dumps(ports))
 
 except requests.exceptions.RequestException as e:
     print(f"Request failed: {e}")
