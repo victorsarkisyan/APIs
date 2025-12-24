@@ -27,8 +27,9 @@ data = response.json()
 # Only return interface names/IDs for discovery
 interfaces = []
 for ifname, details in data["results"].items():
-    interfaces.append({
-        "{#IFNAME}": details["name"]
-    })
+    if details["tx_bytes"] > 0 or details["rx_bytes"] > 0:
+        interfaces.append({
+            "{#IFNAME}": details["name"]
+        })
 
 print(json.dumps(interfaces))
