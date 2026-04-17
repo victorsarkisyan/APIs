@@ -29,8 +29,8 @@ for radio in results[0].get('radio', []):
     # Skip radios with unknown type
     if radio.get("radio_type") and radio["radio_type"].lower() != "unknown":
         lld_data["data"].append({
-            "{#RADIOID}": radio["radio_id"],
-            "{#RADIOTYPE}": radio["radio_type"]
+            "{#radio_id}": radio["radio_id"],
+            "{#radio_type}": radio["radio_type"]
         })
 
 print(json.dumps(lld_data))
