@@ -41,8 +41,8 @@ for ap in results:
 
         ap_entry["radio"].append({
             "radio_id": radio.get("radio_id"),
-            "tx_bytes": radio.get("bytes_tx", 0),
-            "bytes_rx": radio.get("bytes_rx", 0),
+            "bandwidth_tx": radio.get("bandwidth_tx", 0),
+            "bandwidth_rx": radio.get("bandwidth_rx", 0),
             "tx_power": radio.get("oper_txpower", 0),
             "client_count": radio.get("client_count", 0)
         })
