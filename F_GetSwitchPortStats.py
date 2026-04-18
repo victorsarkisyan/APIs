@@ -28,23 +28,25 @@ try:
 
     data = response.json()
 
-    # flatten results list (FortiGate sometimes returns list for single switch)
     results = data.get("results", {})
 
+    # flatten single-switch response
     if isinstance(results, list) and len(results) == 1:
         results = results[0]
 
     ports = results.get("ports", {})
 
-    lld = []
+    output = {
+        "results": []
+    }
 
     for port_name, stats in ports.items():
 
-        # optional: skip completely idle ports
+        # skip idle ports if desired
         if stats.get("tx-bytes", 0) == 0 and stats.get("rx-bytes", 0) == 0:
             continue
 
-        lld.append({
+        output["results"].append({
             "{#PORT}": port_name,
             "tx_bytes": stats.get("tx-bytes", 0),
             "rx_bytes": stats.get("rx-bytes", 0),
@@ -54,8 +56,7 @@ try:
             "rx_drops": stats.get("rx-drops", 0)
         })
 
-    # IMPORTANT: no {"data": ...}
-    print(json.dumps(lld))
+    print(json.dumps(output))
 
 except requests.exceptions.RequestException as e:
     print(f"Request failed: {e}")
