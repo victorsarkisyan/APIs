@@ -5,7 +5,6 @@ import json
 import sys
 import urllib3
 
-# Disable insecure request warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 api_key = sys.argv[1]
@@ -15,7 +14,7 @@ switch = sys.argv[3]
 url = f"https://{controller_ip}/api/v2/monitor/switch-controller/managed-switch/port-stats"
 
 params = {
-     'mkey': switch
+    'mkey': switch
 }
 
 headers = {
@@ -29,11 +28,32 @@ try:
 
     data = response.json()
 
-    # flatten results list (FortiGate returns a list even for one sdwitch)
+    # flatten results list (FortiGate returns a list even for one switch)
     if isinstance(data.get("results"), list) and len(data["results"]) == 1:
         data["results"] = data["results"][0]
 
-    print(json.dumps(data))
+    results = data.get("results", {})
+    ports = results.get("ports", {})
+
+    lld = []
+
+    for port_name, stats in ports.items():
+
+        # optional: skip unused ports
+        if stats.get("tx-bytes", 0) == 0 and stats.get("rx-bytes", 0) == 0:
+            continue
+
+        lld.append({
+            "{#PORT}": port_name,
+            "tx_bytes": stats.get("tx-bytes", 0),
+            "rx_bytes": stats.get("rx-bytes", 0),
+            "tx_errors": stats.get("tx-errors", 0),
+            "rx_errors": stats.get("rx-errors", 0),
+            "tx_drops": stats.get("tx-drops", 0),
+            "rx_drops": stats.get("rx-drops", 0)
+        })
+
+    print(json.dumps({"data": lld}))
 
 except requests.exceptions.RequestException as e:
     print(f"Request failed: {e}")
