@@ -14,12 +14,12 @@ switch = sys.argv[3]
 url = f"https://{controller_ip}/api/v2/monitor/switch-controller/managed-switch/port-stats"
 
 params = {
-    'mkey': switch
+    "mkey": switch
 }
 
 headers = {
-    'Content-Type': 'application/json',
-    'Authorization': f'Bearer {api_key}'
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {api_key}"
 }
 
 try:
@@ -28,18 +28,19 @@ try:
 
     data = response.json()
 
-    # flatten results list (FortiGate returns a list even for one switch)
-    if isinstance(data.get("results"), list) and len(data["results"]) == 1:
-        data["results"] = data["results"][0]
-
+    # flatten results list (FortiGate sometimes returns list for single switch)
     results = data.get("results", {})
+
+    if isinstance(results, list) and len(results) == 1:
+        results = results[0]
+
     ports = results.get("ports", {})
 
     lld = []
 
     for port_name, stats in ports.items():
 
-        # optional: skip unused ports
+        # optional: skip completely idle ports
         if stats.get("tx-bytes", 0) == 0 and stats.get("rx-bytes", 0) == 0:
             continue
 
@@ -53,7 +54,8 @@ try:
             "rx_drops": stats.get("rx-drops", 0)
         })
 
-    print(json.dumps({"data": lld}))
+    # IMPORTANT: no {"data": ...}
+    print(json.dumps(lld))
 
 except requests.exceptions.RequestException as e:
     print(f"Request failed: {e}")
