@@ -27,33 +27,29 @@ try:
     response.raise_for_status()
 
     data = response.json()
-    results = data.get("results", {})
+    results = data.get("results", [])
 
-    if isinstance(results, list) and len(results) == 1:
-        results = results[0]
-
-    ports = results.get("ports", {})
+    if isinstance(results, dict):
+        results = [results]
 
     output = {
-        "results": [
-            {
-                "switch": switch,
-                "port": []
-            }
-        ]
+    "switch": switch,
+    "port": []
     }
 
-    for port_name, stats in ports.items():
+    for entry in results:
+        ports = entry.get("ports", {})
 
-        output["results"][0]["port"].append({
-            "port_name": port_name,
-            "tx_bytes": stats.get("tx-bytes", 0),
-            "rx_bytes": stats.get("rx-bytes", 0),
-            "tx_errors": stats.get("tx-errors", 0),
-            "rx_errors": stats.get("rx-errors", 0),
-            "tx_drops": stats.get("tx-drops", 0),
-            "rx_drops": stats.get("rx-drops", 0)
-        })
+        for port_name, stats in ports.items():
+            output["port"].append({
+                "port_name": port_name,
+                "tx_bytes": stats.get("tx-bytes", 0),
+                "rx_bytes": stats.get("rx-bytes", 0),
+                "tx_errors": stats.get("tx-errors", 0),
+                "rx_errors": stats.get("rx-errors", 0),
+                "tx_drops": stats.get("tx-drops", 0),
+                "rx_drops": stats.get("rx-drops", 0)
+            })
 
     print(json.dumps(output))
 
