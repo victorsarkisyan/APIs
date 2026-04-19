@@ -27,27 +27,26 @@ try:
     response.raise_for_status()
 
     data = response.json()
-
     results = data.get("results", {})
 
-    # flatten single-switch response
     if isinstance(results, list) and len(results) == 1:
         results = results[0]
 
     ports = results.get("ports", {})
 
     output = {
-        "results": []
+        "results": [
+            {
+                "switch": switch,
+                "port": []
+            }
+        ]
     }
 
     for port_name, stats in ports.items():
 
-        # skip idle ports if desired
-        if stats.get("tx-bytes", 0) == 0 and stats.get("rx-bytes", 0) == 0:
-            continue
-
-        output["results"].append({
-            "{#PORT}": port_name,
+        output["results"][0]["port"].append({
+            "port_name": port_name,
             "tx_bytes": stats.get("tx-bytes", 0),
             "rx_bytes": stats.get("rx-bytes", 0),
             "tx_errors": stats.get("tx-errors", 0),
