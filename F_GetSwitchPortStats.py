@@ -51,7 +51,8 @@ try:
                 "rx_drops": stats.get("rx-drops", 0),
                 "collisions": stats.get("collisions", 0),
                 "crc-alignments": stats.get("crc-alignments", 0),
-                "fragments": stats.get("fragments", 0)
+                "fragments": stats.get("fragments", 0), #Frames <64 bytes that also have a bad CRC, Physical layer problems, Interference or bad cabling
+                "undersize": stats.get("undersize", 0) #Frames smaller than 64 bytes (minimum Ethernet frame) Faulty NICs, Corruption on the wire
             })
 
     print(json.dumps(output))
