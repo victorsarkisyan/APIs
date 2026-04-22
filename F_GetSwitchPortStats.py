@@ -28,7 +28,7 @@ try:
 
     data = response.json()
     results = data.get("results", [])
-
+    # print(results)
     if isinstance(results, dict):
         results = [results]
 
@@ -48,7 +48,10 @@ try:
                 "tx_errors": stats.get("tx-errors", 0),
                 "rx_errors": stats.get("rx-errors", 0),
                 "tx_drops": stats.get("tx-drops", 0),
-                "rx_drops": stats.get("rx-drops", 0)
+                "rx_drops": stats.get("rx-drops", 0),
+                "collisions": stats.get("collisions", 0),
+                "crc-alignments": stats.get("crc-alignments", 0),
+                "fragments": stats.get("fragments", 0)
             })
 
     print(json.dumps(output))
