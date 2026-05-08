@@ -34,3 +34,4 @@ for radio in results[0].get('radio', []):
         })
 
 print(json.dumps(lld_data))
+# print(results)

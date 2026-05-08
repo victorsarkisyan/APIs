@@ -44,7 +44,8 @@ for ap in results:
             "bandwidth_tx": radio.get("bandwidth_tx", 0),
             "bandwidth_rx": radio.get("bandwidth_rx", 0),
             "tx_power": radio.get("oper_txpower", 0),
-            "client_count": radio.get("client_count", 0)
+            "client_count": radio.get("client_count", 0),
+            "oper_chan": radio.get("oper_chan", 0)
         })
 
     output["results"].append(ap_entry)
